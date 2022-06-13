@@ -1,4 +1,6 @@
 import {Component, EventEmitter, Output} from "@angular/core";
+import { NgForm } from "@angular/forms";
+import { from } from "rxjs";
 import { Product } from '../product.model';
 
 @Component({
@@ -13,10 +15,13 @@ export class ProductCreateComponent{
   @Output() productCreated = new EventEmitter<Product>();
 
 
-  onAddProduct(){
+  onAddProduct(form: NgForm){
+    if(form.invalid){
+      return;
+    }
     const post: Product = {
-      title: this.enteredTitle,
-      content: this.enteredContetnt
+      title: form.value.title,
+      content: form.value.content
     };
       this.productCreated.emit(post);
   }

@@ -1,9 +1,14 @@
 <mat-card>
-  <mat-form-field>
-    <input matInput type="text" [(ngModel)]="enteredTitle">
-  </mat-form-field>
-  <mat-form-field class="example-full-width" appearance="fill">
-    <textarea matInput rows="6" [(ngModel)]="enteredContetnt"></textarea>
-  </mat-form-field>
-  <button mat-raised-button color="" (click)="onAddProduct()">Save Product</button>
+  <form (submit)="onAddProduct(productForm)" #productForm="ngForm">
+    <mat-form-field>
+      <input matInput type="text" name="title" ngModel required #title="ngModel">
+      <mat-error *ngIf="title.invalid">Enter something</mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+      <textarea matInput rows="5" name="content" ngModel  required #content="ngModel"></textarea>
+      <mat-error *ngIf="content.invalid">Enter something</mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit" >Save Product</button>
+  </form>
+
 </mat-card>
