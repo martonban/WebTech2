@@ -1,4 +1,5 @@
 import {Component, Input} from "@angular/core";
+import { Product } from '../product.model';
 
 @Component({
   selector : 'app-product-list',
@@ -17,6 +18,6 @@ export class ProductListComponent{
   */
 
 
-  @Input() products = [];
+  @Input() products: Product[] = [];
 
 }
