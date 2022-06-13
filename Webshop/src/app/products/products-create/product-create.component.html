@@ -1,9 +1,9 @@
 <mat-card>
   <mat-form-field>
-    <input type="text">
-  </mat-form-field>>
+    <input matInput type="text" [(ngModel)]="enteredTitle">
+  </mat-form-field>
   <mat-form-field class="example-full-width" appearance="fill">
-    <textarea matInput rows="6" [(ngModel)]="enterdValue"></textarea>
+    <textarea matInput rows="6" [(ngModel)]="enteredContetnt"></textarea>
   </mat-form-field>
   <button mat-raised-button color="" (click)="onAddProduct()">Save Product</button>
 </mat-card>

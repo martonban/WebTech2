@@ -1,16 +1,22 @@
-import {Component} from "@angular/core";
+import {Component, EventEmitter, Output} from "@angular/core";
 
 @Component({
   selector: 'app-product-create',
-  templateUrl: '/product-create.component.html',
+  templateUrl: './product-create.component.html',
   styleUrls: ['./post-create.component.css']
 
 })
 export class ProductCreateComponent{
-  enterdValue = '';
-  newProduct = 'No Content';
+  enteredTitle = '';
+  enteredContetnt = '';
+  @Output() productCreated = new EventEmitter();
+
 
   onAddProduct(){
-    this.newProduct= this.enterdValue;
+    const post = {
+      title: this.enteredTitle,
+      content: this.enteredContetnt
+    };
+      this.productCreated.emit(post);
   }
 }
