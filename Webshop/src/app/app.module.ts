@@ -7,19 +7,20 @@ import {MatCardModule} from '@angular/material/card';
 import {ProductCreateComponent} from "./products/products-create/product-create.component";
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {HeaderComponent} from "./header/header.component";
-
-
+import {ProductListComponent} from "./products/product-list/product-list.component";
 
 
 @NgModule({
     declarations: [
         AppComponent,
         ProductCreateComponent,
-      HeaderComponent
+        HeaderComponent,
+        ProductListComponent
     ],
   imports: [
     BrowserModule,
@@ -29,7 +30,8 @@ import {HeaderComponent} from "./header/header.component";
     MatInputModule,
     MatCardModule,
     MatButtonModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]
