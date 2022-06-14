@@ -15,6 +15,7 @@ import {HeaderComponent} from "./header/header.component";
 import {ProductListComponent} from "./products/product-list/product-list.component";
 
 
+
 @NgModule({
     declarations: [
         AppComponent,

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 
-import { Product } from './products/product.model';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +7,4 @@ import { Product } from './products/product.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  storedProduct: Product[] = [];
-
-  onProductAdded(product){
-    this.storedProduct.push(product);
-  }
 }

@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Output} from "@angular/core";
+import {Component} from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { from } from "rxjs";
-import { Product } from '../product.model';
+import { ProductService } from "../product.service";
 
 @Component({
   selector: 'app-product-create',
@@ -12,17 +12,15 @@ import { Product } from '../product.model';
 export class ProductCreateComponent{
   enteredTitle = '';
   enteredContetnt = '';
-  @Output() productCreated = new EventEmitter<Product>();
+
+
+  constructor(public productsService: ProductService){}
 
 
   onAddProduct(form: NgForm){
     if(form.invalid){
       return;
     }
-    const post: Product = {
-      title: form.value.title,
-      content: form.value.content
-    };
-      this.productCreated.emit(post);
+      this.productsService.addProduct(form.value.title, form.value.content);
   }
 }

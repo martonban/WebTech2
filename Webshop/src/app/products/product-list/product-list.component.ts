@@ -1,23 +1,31 @@
-import {Component, Input} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import { Subscription } from "rxjs";
 import { Product } from '../product.model';
+import { ProductService } from "../product.service";
 
 @Component({
   selector : 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent{
-
-  /*
-  products = [
-    {title:"Miért jó az OpenGL", content:"Az OpenGL egy nagyon gyors és használtó API az alacsony szintű grafika programozáshoz"},
-    {title:"Miért jó a Vulkan", content:"Az Vulkan egy nagyon gyors és használtó API az alacsony szintű grafika programozáshoz"},
-    {title:"Miért jó a Metal", content:"Mert a buzi Apple"},
-    {title:"Miért jó a three.js", content:"Mert a kurva nehéz a többi"},
-  ];
-  */
+export class ProductListComponent implements OnInit, OnDestroy{
 
 
-  @Input() products: Product[] = [];
+  products: Product[] = [];
+  private productSub: Subscription;
 
+  constructor(public productsService: ProductService){}
+
+  ngOnInit(){
+    this.products = this.productsService.getProduct();
+    this.productSub = this.productsService.getProductUpdateListener().subscribe(
+      (products: Product[]) => {
+        this.products = products;
+      }
+    );
+  }
+
+  ngOnDestroy(){
+    this.productSub.unsubscribe();
+  }
 }
