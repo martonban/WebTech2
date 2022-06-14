@@ -22,5 +22,6 @@ export class ProductCreateComponent{
       return;
     }
       this.productsService.addProduct(form.value.title, form.value.content);
+      form.resetForm();
   }
 }
