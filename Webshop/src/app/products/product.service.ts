@@ -24,7 +24,12 @@ export class ProductService{
 
   addProduct(title: string, content: string){
     const product: Product = { id: null, title: title, content: content};
-    this.products.push(product);
-    this.productUpdated.next([...this.products]);
+    this.http.post<{message: string}>('http://localhost:3000/api/product', product)
+    .subscribe((responseData) => {
+      console.log(responseData.message);
+      this.products.push(product);
+      this.productUpdated.next([...this.products]);
+    });
+
   }
 }
