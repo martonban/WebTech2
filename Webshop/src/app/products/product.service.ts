@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import {Subject} from 'rxjs'
 import { Product } from "./product.model";
 import { HttpClient } from "@angular/common/http";
+import { map } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class ProductService{
@@ -11,9 +12,18 @@ export class ProductService{
   constructor(private http: HttpClient){}
 
   getProduct(){
-    this.http.get<{message: string, product: Product[]}>('http://localhost:3000/api/product')
-    .subscribe((productData) => {
-      this.products = productData.product;
+    this.http.get<{message: string, product: any}>('http://localhost:3000/api/product')
+    .pipe(map((productData) => {
+      return productData.product.map(product => {
+        return {
+          title: product.title,
+          content: product.content,
+          id: product._id
+        }
+      });
+    }))
+    .subscribe((transfomedProducts) => {
+      this.products = transfomedProducts;
       this.productUpdated.next([...this.products]);
     });
   }
