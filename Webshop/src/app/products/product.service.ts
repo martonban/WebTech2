@@ -34,9 +34,10 @@ export class ProductService{
 
   addProduct(title: string, content: string){
     const product: Product = { id: null, title: title, content: content};
-    this.http.post<{message: string}>('http://localhost:3000/api/product', product)
+    this.http.post<{message: string, productId: string}>('http://localhost:3000/api/product', product)
     .subscribe((responseData) => {
-      console.log(responseData.message);
+      const id = responseData.productId;
+      product.id = id;
       this.products.push(product);
       this.productUpdated.next([...this.products]);
     });

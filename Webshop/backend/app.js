@@ -39,9 +39,11 @@ app.post('/api/product', (req, res, next) => {
     title: req.body.title,
     content: req.body.content
   });
-  product.save();
-  res.status(201).json({
-    message: 'Product added succesfully'
+  product.save().then(result => {
+    res.status(201).json({
+      message: 'Product added succesfully',
+      productId: result._id
+    });
   });
 });
 
