@@ -53,4 +53,11 @@ app.get('/api/product', (req, res, next) => {
   });
 });
 
+app.delete("/api/product/:id", (req, res, next) => {
+  Product.deleteOne({_id: req.params.id}).then(result => {
+    console.log(result);
+    res.status(200).json({message: 'Product Deleted'});
+  });
+});
+
 module.exports = app;

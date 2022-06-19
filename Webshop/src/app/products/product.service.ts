@@ -40,6 +40,14 @@ export class ProductService{
       this.products.push(product);
       this.productUpdated.next([...this.products]);
     });
-
   }
+
+  deleteProduct(productId: string){
+    this.http.delete("http://localhost:3000/api/product/" + productId)
+    .subscribe(() => {
+      console.log('Deleted!')
+    });
+  }
+
+
 }
