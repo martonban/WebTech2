@@ -3,6 +3,9 @@ const bodyParser =  require('body-parser');
 const mongoose = require('mongoose');
 
 
+// Server start:
+// npm run start:server
+
 const Product = require('./models/product');
 
 const app = express();

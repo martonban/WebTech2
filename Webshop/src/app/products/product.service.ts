@@ -45,7 +45,10 @@ export class ProductService{
   deleteProduct(productId: string){
     this.http.delete("http://localhost:3000/api/product/" + productId)
     .subscribe(() => {
-      console.log('Deleted!')
+      console.log("DELETED");
+      const updatedProduct = this.products.filter(product => product.id !== productId);
+      this.products = updatedProduct;
+      this.productUpdated.next([...this.products]);
     });
   }
 
