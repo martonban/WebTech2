@@ -60,7 +60,7 @@ export class ProductService{
 
 
   updateProduct(id: string, title: string, content: string){
-    const product: Product = {id: id, title: title, content: content };
+    const product: Product = { id: id, title: title, content: content };
     this.http.put('http://localhost:3000/api/product/' + id, product)
     .subscribe(response => {
       const updatedProduct = [...this.products];

@@ -52,8 +52,8 @@ app.put("/api/product/:id", (req, res, next) => {
   const product = new Product({
     _id: req.body.id,
     title: req.body.title,
-    connect: req.body.content
-  })
+    content: req.body.content
+  });
   Product.updateOne({_id: req.params.id}, product).then(result => {
     res.status(200).json({message: 'Update Succesful!'});
   });
