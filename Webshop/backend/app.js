@@ -73,7 +73,7 @@ app.get('/api/product', (req, res, next) => {
 app.get("/api/product/:id", (req, res, next) => {
   Product.findById(req.params.id).then(product => {
     if(product){
-      res.status(200  ).json(product);
+      res.status(200).json(product);
     }else{
       res.status(404).json({message: 'Product not found!'});
     }
