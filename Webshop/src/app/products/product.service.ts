@@ -3,13 +3,14 @@ import {Subject} from 'rxjs'
 import { Product } from "./product.model";
 import { HttpClient } from "@angular/common/http";
 import { map } from 'rxjs/operators';
+import { Router } from "@angular/router";
 
 @Injectable({providedIn: 'root'})
 export class ProductService{
   private products: Product[] = [];
   private productUpdated = new Subject<Product[]>();
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient, private router: Router){}
 
   getProducts(){
     this.http.get<{message: string, product: any}>('http://localhost:3000/api/product')
@@ -45,6 +46,7 @@ export class ProductService{
       product.id = id;
       this.products.push(product);
       this.productUpdated.next([...this.products]);
+      this.router.navigate(["/"]);
     });
   }
 
@@ -68,6 +70,7 @@ export class ProductService{
       updatedProduct[oldProductIndex] = product;
       this.products = updatedProduct;
       this.productUpdated.next([...this.products]);
+      this.router.navigate(["/"]);
     });
   }
 

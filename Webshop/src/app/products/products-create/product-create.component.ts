@@ -17,6 +17,7 @@ export class ProductCreateComponent implements OnInit{
   private mode = 'create';
   private productId: string;
   product: Product;
+  isLoading = false;
 
 
   constructor(public productsService: ProductService, public route: ActivatedRoute){}
@@ -26,7 +27,9 @@ export class ProductCreateComponent implements OnInit{
       if(paramMap.has('productId')){
         this.mode = 'edit';
         this.productId = paramMap.get('productId');
+        this.isLoading = true;
         this.productsService.getProduct(this.productId).subscribe(productData => {
+          this.isLoading = false;
           this.product = {id: productData._id, title: productData.title, content: productData.content};
         });
       }else{
