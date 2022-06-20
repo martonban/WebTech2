@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 // Server start:
 // npm run start:server
 
-const Product = require('./models/product');
+
+const productsRouters = require("./routes/products");
 
 const app = express();
 
@@ -34,57 +35,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/api/product', (req, res, next) => {
-  const product = new Product({
-    title: req.body.title,
-    content: req.body.content
-  });
-  product.save().then(result => {
-    res.status(201).json({
-      message: 'Product added succesfully',
-      productId: result._id
-    });
-  });
-});
-
-
-app.put("/api/product/:id", (req, res, next) => {
-  const product = new Product({
-    _id: req.body.id,
-    title: req.body.title,
-    content: req.body.content
-  });
-  Product.updateOne({_id: req.params.id}, product).then(result => {
-    res.status(200).json({message: 'Update Succesful!'});
-  });
-});
-
-
-app.get('/api/product', (req, res, next) => {
-  Product.find()
-  .then(documents => {
-    res.status(200).json({
-      message: 'Product fetched succesfully!',
-      product: documents
-    });
-  });
-});
-
-app.get("/api/product/:id", (req, res, next) => {
-  Product.findById(req.params.id).then(product => {
-    if(product){
-      res.status(200).json(product);
-    }else{
-      res.status(404).json({message: 'Product not found!'});
-    }
-  });
-});
-
-app.delete("/api/product/:id", (req, res, next) => {
-  Product.deleteOne({_id: req.params.id}).then(result => {
-    console.log(result);
-    res.status(200).json({message: 'Product Deleted'});
-  });
-});
+app.use("/api/product", productsRouters);
 
 module.exports = app;
