@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { ContentChild, Injectable } from "@angular/core";
 import {Subject} from 'rxjs'
 import { Product } from "./product.model";
 import { HttpClient } from "@angular/common/http";
@@ -11,7 +11,7 @@ export class ProductService{
 
   constructor(private http: HttpClient){}
 
-  getProduct(){
+  getProducts(){
     this.http.get<{message: string, product: any}>('http://localhost:3000/api/product')
     .pipe(map((productData) => {
       return productData.product.map(product => {
@@ -30,6 +30,11 @@ export class ProductService{
 
   getProductUpdateListener(){
     return this.productUpdated.asObservable();
+  }
+
+  getProduct(id: string){
+    return this.http.get<{_id: string, title: string, content: string}>
+    ('http://localhost:3000/api/product/' + id);
   }
 
   addProduct(title: string, content: string){
@@ -53,5 +58,17 @@ export class ProductService{
     });
   }
 
+
+  updateProduct(id: string, title: string, content: string){
+    const product: Product = {id: id, title: title, content: content };
+    this.http.put('http://localhost:3000/api/product/' + id, product)
+    .subscribe(response => {
+      const updatedProduct = [...this.products];
+      const oldProductIndex = updatedProduct.findIndex(p => p.id === product.id);
+      updatedProduct[oldProductIndex] = product;
+      this.products = updatedProduct;
+      this.productUpdated.next([...this.products]);
+    });
+  }
 
 }

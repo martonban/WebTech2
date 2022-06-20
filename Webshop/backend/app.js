@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
+    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
   );
   next();
 });
@@ -48,6 +48,18 @@ app.post('/api/product', (req, res, next) => {
 });
 
 
+app.put("/api/product/:id", (req, res, next) => {
+  const product = new Product({
+    _id: req.body.id,
+    title: req.body.title,
+    connect: req.body.content
+  })
+  Product.updateOne({_id: req.params.id}, product).then(result => {
+    res.status(200).json({message: 'Update Succesful!'});
+  });
+});
+
+
 app.get('/api/product', (req, res, next) => {
   Product.find()
   .then(documents => {
@@ -55,6 +67,16 @@ app.get('/api/product', (req, res, next) => {
       message: 'Product fetched succesfully!',
       product: documents
     });
+  });
+});
+
+app.get("/api/product/:id", (req, res, next) => {
+  Product.findById(req.params.id).then(product => {
+    if(product){
+      res.status(200  ).json(product);
+    }else{
+      res.status(404).json({message: 'Product not found!'});
+    }
   });
 });
 

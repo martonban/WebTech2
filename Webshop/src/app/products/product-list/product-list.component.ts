@@ -17,7 +17,7 @@ export class ProductListComponent implements OnInit, OnDestroy{
   constructor(public productsService: ProductService){}
 
   ngOnInit(){
-    this.productsService.getProduct();
+    this.productsService.getProducts();
     this.productSub = this.productsService.getProductUpdateListener()
     .subscribe((products: Product[]) => {
         this.products = products;
