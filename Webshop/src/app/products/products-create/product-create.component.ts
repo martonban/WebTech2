@@ -19,6 +19,7 @@ export class ProductCreateComponent implements OnInit{
   product: Product;
   isLoading = false;
   form: FormGroup;
+  imagePreview: string;
 
 
   constructor(public productsService: ProductService, public route: ActivatedRoute){}
@@ -51,8 +52,11 @@ export class ProductCreateComponent implements OnInit{
     const file = (event.target as HTMLInputElement).files[0];
     this.form.patchValue({image: file});
     this.form.get('image').updateValueAndValidity();
-    console.log(file);
-    console.log(this.form);
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = <string>reader.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSaveProduct(){
