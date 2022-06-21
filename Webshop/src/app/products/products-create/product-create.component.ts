@@ -65,7 +65,10 @@ export class ProductCreateComponent implements OnInit{
       return;
     }
     if(this.mode === 'create' ){
-      this.productsService.addProduct(this.form.value.title, this.form.value.content);
+      this.productsService.addProduct(
+        this.form.value.title,
+        this.form.value.content,
+        this.form.value.image);
     }else{
       this.productsService.updateProduct(this.productId, this.form.value.title, this.form.value.content);
     }

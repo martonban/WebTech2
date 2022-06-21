@@ -38,12 +38,18 @@ export class ProductService{
     ('http://localhost:3000/api/product/' + id);
   }
 
-  addProduct(title: string, content: string){
-    const product: Product = { id: null, title: title, content: content};
-    this.http.post<{message: string, productId: string}>('http://localhost:3000/api/product', product)
+  addProduct(title: string, content: string, image: File){
+    const productData = new FormData();
+    productData.append("title", title);
+    productData.append("content", content);
+    productData.append("image", image, title);
+    this.http.post<{message: string, productId: string}>('http://localhost:3000/api/product', productData)
     .subscribe((responseData) => {
-      const id = responseData.productId;
-      product.id = id;
+      const product: Product = {
+        id: responseData.productId,
+        title: title,
+        content: content
+      };
       this.products.push(product);
       this.productUpdated.next([...this.products]);
       this.router.navigate(["/"]);
