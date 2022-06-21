@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { from } from "rxjs";
 import { Product } from "../product.model";
@@ -18,11 +18,16 @@ export class ProductCreateComponent implements OnInit{
   private productId: string;
   product: Product;
   isLoading = false;
+  form: FormGroup;
 
 
   constructor(public productsService: ProductService, public route: ActivatedRoute){}
 
   ngOnInit(){
+    this.form = new FormGroup({
+      title: new FormControl(null, {validators: [Validators.required]}),
+      content: new FormControl(null, {validators: [Validators.required]})
+    });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if(paramMap.has('productId')){
         this.mode = 'edit';
@@ -32,6 +37,7 @@ export class ProductCreateComponent implements OnInit{
           this.isLoading = false;
           this.product = {id: productData._id, title: productData.title, content: productData.content};
         });
+        this.form.setValue({title: this.product.title, content: this.product.content});
       }else{
         this.mode = 'create';
         this.productId = null;
@@ -40,16 +46,16 @@ export class ProductCreateComponent implements OnInit{
   }
 
 
-  onSaveProduct(form: NgForm){
-    if(form.invalid){
+  onSaveProduct(){
+    if(this.form.invalid){
       return;
     }
     if(this.mode === 'create' ){
-      this.productsService.addProduct(form.value.title, form.value.content);
+      this.productsService.addProduct(this.form.value.title, this.form.value.content);
     }else{
-      this.productsService.updateProduct(this.productId, form.value.title, form.value.content);
+      this.productsService.updateProduct(this.productId, this.form.value.title, this.form.value.content);
     }
 
-      form.resetForm();
+    this.form.reset();
   }
 }
