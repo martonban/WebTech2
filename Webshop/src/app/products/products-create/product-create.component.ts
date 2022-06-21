@@ -4,6 +4,7 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 import { from } from "rxjs";
 import { Product } from "../product.model";
 import { ProductService } from "../product.service";
+import { mimeType } from "./mime-type.validator"
 
 @Component({
   selector: 'app-product-create',
@@ -28,7 +29,7 @@ export class ProductCreateComponent implements OnInit{
     this.form = new FormGroup({
       title: new FormControl(null, {validators: [Validators.required]}),
       content: new FormControl(null, {validators: [Validators.required]}),
-      image: new FormControl(null, {validators: [Validators.required]})
+      image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if(paramMap.has('productId')){
