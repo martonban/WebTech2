@@ -1,4 +1,4 @@
-import { ContentChild, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import {Subject} from 'rxjs'
 import { Product } from "./product.model";
 import { HttpClient } from "@angular/common/http";
@@ -8,33 +8,35 @@ import { Router } from "@angular/router";
 @Injectable({providedIn: 'root'})
 export class ProductService{
   private products: Product[] = [];
-  private productUpdated = new Subject<Product[]>();
-
+  private productsUpdated = new Subject<Product[]>();
   constructor(private http: HttpClient, private router: Router){}
 
   getProducts(){
-    this.http.get<{message: string, product: any}>('http://localhost:3000/api/product')
-    .pipe(map((productData) => {
+    this.http
+    .get<{message: string; product: any}>('http://localhost:3000/api/product')
+    .pipe(
+      map(productData => {
       return productData.product.map(product => {
         return {
+          id: product._id,
           title: product.title,
           content: product.content,
-          id: product._id
-        }
+          imagePath: product.imagePath
+        };
       });
     }))
-    .subscribe((transfomedProducts) => {
+    .subscribe(transfomedProducts => {
       this.products = transfomedProducts;
-      this.productUpdated.next([...this.products]);
+      this.productsUpdated.next([...this.products]);
     });
   }
 
   getProductUpdateListener(){
-    return this.productUpdated.asObservable();
+    return this.productsUpdated.asObservable();
   }
 
   getProduct(id: string){
-    return this.http.get<{ _id: string; title: string; content: string}>
+    return this.http.get<{ _id: string, title: string, content: string, imagePath: string}>
     ('http://localhost:3000/api/product/' + id);
   }
 
@@ -43,15 +45,16 @@ export class ProductService{
     productData.append("title", title);
     productData.append("content", content);
     productData.append("image", image, title);
-    this.http.post<{message: string, productId: string}>('http://localhost:3000/api/product', productData)
-    .subscribe((responseData) => {
+    this.http.post<{message: string, product: Product}>('http://localhost:3000/api/product', productData)
+    .subscribe(responseData => {
       const product: Product = {
-        id: responseData.productId,
+        id: responseData.product.id,
         title: title,
-        content: content
+        content: content,
+        imagePath: responseData.product.imagePath
       };
       this.products.push(product);
-      this.productUpdated.next([...this.products]);
+      this.productsUpdated.next([...this.products]);
       this.router.navigate(["/"]);
     });
   }
@@ -62,20 +65,39 @@ export class ProductService{
       console.log("DELETED");
       const updatedProduct = this.products.filter(product => product.id !== productId);
       this.products = updatedProduct;
-      this.productUpdated.next([...this.products]);
+      this.productsUpdated.next([...this.products]);
     });
   }
 
 
-  updateProduct(id: string, title: string, content: string){
-    const product: Product = { id: id, title: title, content: content };
-    this.http.put('http://localhost:3000/api/product/' + id, product)
+  updateProduct(id: string, title: string, content: string, image: File | string){
+    let productData: Product | FormData;
+    if(typeof image === "object"){
+      productData = new FormData();
+      productData.append("id", id);
+      productData.append("title", title);
+      productData.append("content", content);
+      productData.append("image", image, title);
+    }else{
+      productData = {
+        id: id,
+        title: title,
+        content: content,
+        imagePath: image
+      };
+    }
+    this.http.put('http://localhost:3000/api/product/' + id, productData)
     .subscribe(response => {
-      const updatedProduct = [...this.products];
-      const oldProductIndex = updatedProduct.findIndex(p => p.id === product.id);
-      updatedProduct[oldProductIndex] = product;
-      this.products = updatedProduct;
-      this.productUpdated.next([...this.products]);
+      const updatedProducts = [...this.products];
+      const oldProductIndex = updatedProducts.findIndex(p => p.id === id);
+      const product: Product = {
+        id: id,
+        title: title,
+        content: content,
+        imagePath: ""};
+      updatedProducts[oldProductIndex] = product;
+      this.products = updatedProducts;
+      this.productsUpdated.next([...this.products]);
       this.router.navigate(["/"]);
     });
   }

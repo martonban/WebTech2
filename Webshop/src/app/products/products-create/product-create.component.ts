@@ -13,8 +13,6 @@ import { mimeType } from "./mime-type.validator"
 
 })
 export class ProductCreateComponent implements OnInit{
-  enteredTitle = '';
-  enteredContetnt = '';
   private mode = 'create';
   private productId: string;
   product: Product;
@@ -27,9 +25,14 @@ export class ProductCreateComponent implements OnInit{
 
   ngOnInit(){
     this.form = new FormGroup({
-      title: new FormControl(null, {validators: [Validators.required]}),
+      title: new FormControl(null, {
+        validators: [Validators.required]
+      }),
       content: new FormControl(null, {validators: [Validators.required]}),
-      image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
+      image: new FormControl(null, {
+        validators: [Validators.required],
+        asyncValidators: [mimeType]
+      })
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if(paramMap.has('productId')){
@@ -38,9 +41,19 @@ export class ProductCreateComponent implements OnInit{
         this.isLoading = true;
         this.productsService.getProduct(this.productId).subscribe(productData => {
           this.isLoading = false;
-          this.product = {id: productData._id, title: productData.title, content: productData.content};
+          this.product = {
+            id: productData._id,
+            title: productData.title,
+            content: productData.content,
+            imagePath: productData.imagePath
+          };
+
+        this.form.setValue({
+          title: this.product.title,
+          content: this.product.content,
+          image: this.product.imagePath
         });
-        this.form.setValue({title: this.product.title, content: this.product.content});
+      });
       }else{
         this.mode = 'create';
         this.productId = null;
@@ -70,7 +83,12 @@ export class ProductCreateComponent implements OnInit{
         this.form.value.content,
         this.form.value.image);
     }else{
-      this.productsService.updateProduct(this.productId, this.form.value.title, this.form.value.content);
+      this.productsService.updateProduct(
+        this.productId,
+        this.form.value.title,
+        this.form.value.content,
+        this.form.value.image
+        );
     }
 
     this.form.reset();

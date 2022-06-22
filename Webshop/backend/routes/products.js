@@ -28,29 +28,45 @@ const storage = multer.diskStorage({
 });
 
 router.post("", multer({storage: storage}).single("image"), (req, res, next) => {
+  const url = req.protocol + '://' + req.get("host");
   const product = new Product({
     title: req.body.title,
-    content: req.body.content
+    content: req.body.content,
+    imagePath: url + "/images/" + req.file.filename
   });
   product.save().then(result => {
     res.status(201).json({
       message: 'Product added succesfully',
-      productId: result._id
+      product: {
+        ...result,
+        id: result._id
+      }
     });
   });
 });
 
 
-router.put("/:id", (req, res, next) => {
-  const product = new Product({
+router.put(
+  "/:id",
+  multer({storage: storage}).single("image"),
+  (req, res, next) => {
+  let imagePath = req.body.imagePath;
+  if (req.file){
+    const url = req.protocol + "://" + req.get("host");
+    imagePath = url + "/images/" + req.file.filename
+  }
+  const product = {
     _id: req.body.id,
     title: req.body.title,
-    content: req.body.content
-  });
+    content: req.body.content,
+    imagePath: imagePath
+  };
+  console.log(product);
   Product.updateOne({_id: req.params.id}, product).then(result => {
     res.status(200).json({message: 'Update Succesful!'});
   });
-});
+  }
+);
 
 
 router.get('', (req, res, next) => {

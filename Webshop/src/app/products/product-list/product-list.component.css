@@ -6,3 +6,11 @@
 .info-text{
   text-align: center;
 }
+
+.product-image{
+  width: 100%;
+}
+
+.product-image img{
+  width: 100%;
+}

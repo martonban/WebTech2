@@ -5,6 +5,9 @@
       {{product.title}}
     </mat-expansion-panel-header>
     <p>{{product.content}}</p>
+    <div class="product-image">
+      <img [src]="product.imagePath" [alt]="product.title">
+    </div>
     <mat-action-row>
       <a mat-button [routerLink]="['/edit', product.id]">Edit</a>
       <button mat-button color="warn" (click)="onDelete(product.id)">Delete</button>
