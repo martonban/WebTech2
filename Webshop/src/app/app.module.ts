@@ -19,6 +19,7 @@ import { AppComponent } from './app.component';
 import {HeaderComponent} from "./header/header.component";
 import {ProductListComponent} from "./products/product-list/product-list.component";
 import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
 
 
 
@@ -28,7 +29,8 @@ import { LoginComponent } from './auth/login/login.component';
         ProductCreateComponent,
         HeaderComponent,
         ProductListComponent,
-        LoginComponent
+        LoginComponent,
+        SignupComponent
     ],
   imports: [
     BrowserModule,
@@ -43,7 +45,7 @@ import { LoginComponent } from './auth/login/login.component';
     MatProgressSpinnerModule,
     ReactiveFormsModule,
     MatPaginatorModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
