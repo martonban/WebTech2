@@ -55,12 +55,12 @@ router.put(
     const url = req.protocol + "://" + req.get("host");
     imagePath = url + "/images/" + req.file.filename
   }
-  const product = {
+  const product = new Product({
     _id: req.body.id,
     title: req.body.title,
     content: req.body.content,
     imagePath: imagePath
-  };
+  });
   console.log(product);
   Product.updateOne({_id: req.params.id}, product).then(result => {
     res.status(200).json({message: 'Update Succesful!'});
