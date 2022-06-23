@@ -11,9 +11,10 @@ export class ProductService{
   private productsUpdated = new Subject<Product[]>();
   constructor(private http: HttpClient, private router: Router){}
 
-  getProducts(){
+  getProducts(productsPerPage: number, currentPage: number){
+    const queryParams = `?pagesize=${productsPerPage}&page=${currentPage}`;
     this.http
-    .get<{message: string; product: any}>('http://localhost:3000/api/product')
+    .get<{message: string; product: any}>('http://localhost:3000/api/product' + queryParams)
     .pipe(
       map(productData => {
       return productData.product.map(product => {
