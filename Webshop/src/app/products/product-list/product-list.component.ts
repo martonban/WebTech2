@@ -14,7 +14,7 @@ export class ProductListComponent implements OnInit, OnDestroy{
 
   products: Product[] = [];
   private productSub: Subscription;
-  totalProducts = 10;
+  totalProducts = 0;
   productsPerPage = 2;
   currentPage = 1;
   pageSizeOptions = [1, 2, 5, 10];
@@ -24,8 +24,9 @@ export class ProductListComponent implements OnInit, OnDestroy{
   ngOnInit(){
     this.productsService.getProducts(this.productsPerPage, this.currentPage);
     this.productSub = this.productsService.getProductUpdateListener()
-    .subscribe((products: Product[]) => {
-        this.products = products;
+    .subscribe((productData: {products: Product[], productCount: number}) => {
+        this.totalProducts = productData.productCount;
+        this.products = productData.products;
       });
   }
 
@@ -36,7 +37,9 @@ export class ProductListComponent implements OnInit, OnDestroy{
   }
 
   onDelete(productId: string){
-    this.productsService.deleteProduct(productId);
+    this.productsService.deleteProduct(productId).subscribe(() =>{
+      this.productsService.getProducts(this.productsPerPage, this.currentPage);
+    });
   }
 
   ngOnDestroy(){

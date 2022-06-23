@@ -73,15 +73,20 @@ router.get('', (req, res, next) => {
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
   const productQuery = Product.find();
+  let fetchedProducts;
   if(pageSize && currentPage){
     productQuery.skip(pageSize * ( currentPage - 1 ))
     .limit(pageSize);
   }
   productQuery
   .then(documents => {
+    fetchedProducts = documents;
+    return Product.count();
+  }).then(count => {
     res.status(200).json({
       message: 'Product fetched succesfully!',
-      product: documents
+      product: fetchedProducts,
+      maxProducts: count
     });
   });
 });
