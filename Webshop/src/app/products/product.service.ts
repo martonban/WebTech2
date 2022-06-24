@@ -9,6 +9,7 @@ import { Router } from "@angular/router";
 export class ProductService{
   private products: Product[] = [];
   private productsUpdated = new Subject<{products: Product[], productCount: number}>();
+
   constructor(private http: HttpClient, private router: Router){}
 
   getProducts(productsPerPage: number, currentPage: number){
